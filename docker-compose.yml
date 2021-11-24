@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+
+  hardhat:
+    container_name: hardhat
+    build: ./docker/hardhat
+    ports:
+      - 8545:8545
+    working_dir: /var/hardhat
+    volumes:
+      - ./:/var/hardhat:cached
+    tty: true
+    environment:
+      - TZ=Asia/Tokyo
+    command: npx hardhat node
+
+  ganache:
+    container_name: ganache
+    image: trufflesuite/ganache-cli:v6.12.2
+    ports:
+      - 8545:8545
+    volumes:
+      - ./volume/ganache:/var/ganache
+    entrypoint:
+      - node
+      - /app/ganache-core.docker.cli.js
+      - --deterministic
+      - --db=/var/ganache/data
+      - --mnemonic
+      - 'minimum symptom minute gloom tragic situate silver mechanic salad amused elite beef'
+      - --networkId
+      - '5777'
+      - --hostname
+      - '0.0.0.0'
+      - --debug
