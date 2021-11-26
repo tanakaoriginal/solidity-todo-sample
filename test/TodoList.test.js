@@ -144,57 +144,5 @@ describe('TodoList contract', function () {
         }
       });
     });
-
-    describe('Create Todo', async function () {
-      it('create a Todo item', async function () {
-        await todoList.createItem('test title 1');
-        expect(await todoList.getItemCount()).to.equal(1);
-        const item = await todoList.getItem(0);
-        expect(item[0]).to.equal(0);
-        expect(item[1]).to.equal('test title 1');
-        expect(item[2]).to.equal(false);
-        expect(item[3]).to.equal(false);
-      });
-    });
-
-    describe('Read Todo', async function () {
-      it('get fist Todo item', async function () {
-        await todoList.createItem('test title 1');
-        expect(await todoList.getItemCount()).to.equal(1);
-        const item = await todoList.getItem(0);
-        expect(item[0]).to.equal(0);
-        expect(item[1]).to.equal('test title 1');
-        expect(item[2]).to.equal(false);
-        expect(item[3]).to.equal(false);
-      });
-
-      it("get a Todo item by index", async function () {
-        await todoList.createItem('test title 1');
-        await todoList.createItem('test title 2');
-        await todoList.createItem('test title 3');
-        expect(await todoList.getItemCount()).to.equal(3);
-
-        item = await todoList.getItem(1);
-        expect(item[0]).to.equal(1);
-        expect(item[1]).to.equal('test title 2');
-        expect(item[2]).to.equal(false);
-        expect(item[3]).to.equal(false);
-      });
-
-      it("get an error by invalid index", async function () {
-        await todoList.createItem('test title 1');
-        await todoList.createItem('test title 2');
-        await todoList.createItem('test title 3');
-        expect(await todoList.getItemCount()).to.equal(3);
-
-        const invalidIndex = 3;
-        try {
-          item = await todoList.getItem(invalidIndex);
-        } catch (e) {
-          expect(/revert/.test(e.message)).to.be.true;
-          expect(/invalid index was given/.test(e.message)).to.be.true;
-        }
-      });
-    });
   });
 });

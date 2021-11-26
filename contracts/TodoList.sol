@@ -5,14 +5,6 @@ pragma solidity ^0.8.9;
 contract TodoList {
     uint256 public taskCount = 0;
 
-    struct Todo {
-        string title;
-        bool completed;
-        bool deleted;
-    }
-
-    Todo[] internal _todoList;
-
     struct Task {
         uint256 id;
         string title;
@@ -34,12 +26,6 @@ contract TodoList {
 
     modifier onlyPresentTasks() {
         require(taskCount > 0, "No tasks found");
-        _;
-    }
-
-    // @deprecated
-    modifier validIndex(uint256 _index) {
-        require(_todoList.length > _index, "invalid index was given");
         _;
     }
 
@@ -84,32 +70,5 @@ contract TodoList {
         taskCount--;
         delete tasks[taskId];
         emit TaskDeleted(taskId, tasks[taskId].title, tasks[taskId].completed);
-    }
-
-    // @deprecated
-    function createItem(string memory _title) public {
-        _todoList.push(Todo(_title, false, false));
-    }
-
-    // @deprecated
-    // For pagenation on the frontend
-    function getItemCount() public view returns (uint256) {
-        return _todoList.length;
-    }
-
-    // @deprecated
-    function getItem(uint256 _index)
-        public
-        view
-        validIndex(_index)
-        returns (
-            uint256,
-            string memory,
-            bool,
-            bool
-        )
-    {
-        string memory title = _todoList[_index].title;
-        return (_index, title, _todoList[_index].completed, _todoList[_index].deleted);
     }
 }
