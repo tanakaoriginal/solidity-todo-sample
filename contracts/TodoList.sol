@@ -3,62 +3,72 @@
 pragma solidity ^0.8.9;
 
 contract TodoList {
-    struct Todo {
+    uint256 public taskCount = 0;
+
+    struct Task {
+        uint256 id;
         string title;
         bool completed;
-        bool deleted;
     }
 
-    Todo[] internal _todoList;
+    event TaskCreated(uint256 id, string content, bool completed);
+    event TaskTitleUpdated(uint256 id, string content, bool completed);
+    event TaskCompletedToggled(uint256 id, string content, bool completed);
+    event TaskDeleted(uint256 id, string content, bool completed);
 
-    modifier validIndex(uint256 _index) {
-        require(_todoList.length > _index, "invalid index was given");
+    mapping(uint256 => Task) public tasks;
+
+    modifier onlyValidTaskId(uint256 taskId) {
+        require(taskCount >= taskId, "the id was out of bounds");
+        require(tasks[taskId].id != 0, "the task does not exist");
         _;
     }
 
-    // @todo add event
-    function createItem(string memory _title) public {
-        _todoList.push(Todo(_title, false, false));
+    modifier onlyPresentTasks() {
+        require(taskCount > 0, "No tasks found");
+        _;
     }
 
-    // For pagenation on the frontend
-    function getItemCount() public view returns (uint256) {
-        return _todoList.length;
+    function createTask(string memory _title) public {
+        taskCount++;
+        tasks[taskCount] = Task(taskCount, _title, false);
+        emit TaskCreated(taskCount, _title, false);
     }
 
-    function getItem(uint256 _index)
+    function getTask(uint256 taskId)
         public
         view
-        validIndex(_index)
-        returns (
-            uint256,
-            string memory,
-            bool,
-            bool
-        )
+        onlyValidTaskId(taskId)
+        returns (Task memory task)
     {
-        string memory title = _todoList[_index].title;
-        return (_index, title, _todoList[_index].completed, _todoList[_index].deleted);
+        return tasks[taskId];
     }
 
-    function updateTitle(uint256 _index, string memory _title)
+    function updateTaskTitle(uint256 taskId, string memory title)
         public
-        validIndex(_index)
+        onlyValidTaskId(taskId)
     {
-        Todo storage todo = _todoList[_index];
-        todo.title = _title;
+        Task storage task = tasks[taskId];
+        task.title = title;
+        emit TaskTitleUpdated(task.id, task.title, task.completed);
     }
 
-    function toggleCompleted(uint256 _index) public {
-        require(_todoList.length > _index, "invalid index was given");
-        Todo storage todo = _todoList[_index];
-        todo.completed = !todo.completed;
+    function toggleTaskCompleted(uint256 taskId)
+        public
+        onlyValidTaskId(taskId)
+    {
+        Task storage task = tasks[taskId];
+        task.completed = !task.completed;
+        emit TaskCompletedToggled(task.id, task.title, task.completed);
     }
 
-    // logical deletion for a Todo item.
-    function removeItem(uint256 _index) public validIndex(_index) {
-        delete _todoList[_index];
-        _todoList[_index].deleted = true;
-        // @todo add event
+    function deleteTask(uint256 taskId)
+        public
+        onlyValidTaskId(taskId)
+        onlyPresentTasks
+    {
+        taskCount--;
+        delete tasks[taskId];
+        emit TaskDeleted(taskId, tasks[taskId].title, tasks[taskId].completed);
     }
 }
