@@ -33,6 +33,44 @@ describe('TodoList contract', function () {
       });
     });
 
+    describe('Read Task', async function () {
+      it('get invalid id error for task id = 1 on empty list', async function () {
+        try {
+          await todoList.getTask(1);
+        } catch(err) {
+          expect(/revert/.test(err.message)).to.be.true;
+          expect(/the id was out of bounds/.test(err.message)).to.be.true;
+        }
+      });
+
+      it('get no existence error for task id = 0 on empty list', async function () {
+        try {
+          await todoList.getTask(0);
+        } catch(err) {
+          expect(/revert/.test(err.message)).to.be.true;
+          expect(/the task does not exist/.test(err.message)).to.be.true;
+        }
+      });
+
+      it('get no existence error for task id = 0 on present list', async function () {
+        try {
+          await todoList.createTask('test title 1');
+          await todoList.getTask(0);
+        } catch(err) {
+          expect(/revert/.test(err.message)).to.be.true;
+          expect(/the task does not exist/.test(err.message)).to.be.true;
+        }
+      });
+
+      it('get fist task item', async function () {
+        await todoList.createTask('test title 1');
+        const task = await todoList.getTask(1);
+        expect(task.id).to.equal(1);
+        expect(task.title).to.equal('test title 1');
+        expect(task.completed).to.false;
+      });
+    });
+
     describe('Create Todo', async function () {
       it('create a Todo item', async function () {
         await todoList.createItem('test title 1');

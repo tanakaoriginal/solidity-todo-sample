@@ -23,8 +23,8 @@ contract TodoList {
 
     mapping(uint256 => Task) public tasks;
 
-    modifier validTaskId(uint256 taskId) {
-        require(taskCount >= taskId, "invalid id was given");
+    modifier onlyValidTaskId(uint256 taskId) {
+        require(taskCount >= taskId, "the id was out of bounds");
         require(tasks[taskId].id != 0, "the task does not exist");
         _;
     }
@@ -41,7 +41,16 @@ contract TodoList {
         emit TaskCreated(taskCount, _title, false);
     }
 
-    // @todo add event
+    function getTask(uint256 taskId)
+        public
+        view
+        onlyValidTaskId(taskId)
+        returns (Task memory task)
+    {
+        return tasks[taskId];
+    }
+
+    // @deprecated
     function createItem(string memory _title) public {
         _todoList.push(Todo(_title, false, false));
     }
@@ -52,6 +61,7 @@ contract TodoList {
         return _todoList.length;
     }
 
+    // @deprecated
     function getItem(uint256 _index)
         public
         view
