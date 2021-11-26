@@ -3,6 +3,8 @@
 pragma solidity ^0.8.9;
 
 contract TodoList {
+    uint256 public taskCount = 0;
+
     struct Todo {
         string title;
         bool completed;
@@ -11,9 +13,32 @@ contract TodoList {
 
     Todo[] internal _todoList;
 
+    struct Task {
+        uint256 id;
+        string title;
+        bool completed;
+    }
+
+    event TaskCreated(uint256 id, string content, bool completed);
+
+    mapping(uint256 => Task) public tasks;
+
+    modifier validTaskId(uint256 taskId) {
+        require(taskCount >= taskId, "invalid id was given");
+        require(tasks[taskId].id != 0, "the task does not exist");
+        _;
+    }
+
+    // @deprecated
     modifier validIndex(uint256 _index) {
         require(_todoList.length > _index, "invalid index was given");
         _;
+    }
+
+    function createTask(string memory _title) public {
+        taskCount++;
+        tasks[taskCount] = Task(taskCount, _title, false);
+        emit TaskCreated(taskCount, _title, false);
     }
 
     // @todo add event
@@ -21,6 +46,7 @@ contract TodoList {
         _todoList.push(Todo(_title, false, false));
     }
 
+    // @deprecated
     // For pagenation on the frontend
     function getItemCount() public view returns (uint256) {
         return _todoList.length;

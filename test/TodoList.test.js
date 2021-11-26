@@ -16,11 +16,22 @@ describe('TodoList contract', function () {
 
   describe('Deployment', async function () {
     it('assign empty Todo list', async function () {
-      expect(await todoList.getItemCount()).to.equal(0);
+      expect(await todoList.taskCount()).to.equal(0);
     });
   });
 
   describe('Transactions', async function () {
+
+    describe('Create Task', async function () {
+      it('create a task', async function () {
+        await todoList.createTask('test title 1');
+        expect(await todoList.taskCount()).to.equal(1);
+        const task = await todoList.tasks(1);
+        expect(task.id).to.equal(1);
+        expect(task.title).to.equal('test title 1');
+        expect(task.completed).to.false;
+      });
+    });
 
     describe('Create Todo', async function () {
       it('create a Todo item', async function () {
