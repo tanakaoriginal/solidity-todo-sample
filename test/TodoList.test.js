@@ -71,6 +71,35 @@ describe('TodoList contract', function () {
       });
     });
 
+    describe('Update Task', async function () {
+      it('update title', async function () {
+        await todoList.createTask('test title 1');
+        expect(await todoList.taskCount()).to.equal(1);
+        const task = await todoList.tasks(1);
+        expect(task.title).to.equal('test title 1');
+
+        await todoList.updateTaskTitle(1, 'test title 1 - updated');
+        const taskUpdated = await todoList.tasks(1);
+        expect(taskUpdated.title).to.equal('test title 1 - updated');
+        expect(taskUpdated.completed).to.equal(false);
+      });
+
+      it('toggle completed', async function () {
+        await todoList.createTask('test title 1');
+        const task = await todoList.tasks(1);
+        expect(task.title).to.equal('test title 1');
+        expect(task.completed).to.equal(false);
+
+        await todoList.toggleTaskCompleted(1);
+        const taskCompleted = await todoList.tasks(1);
+        expect(taskCompleted.completed).to.equal(true);
+
+        await todoList.toggleTaskCompleted(1);
+        const taskCompleteToggled = await todoList.tasks(1);
+        expect(taskCompleteToggled.completed).to.equal(false);
+      });
+    });
+
     describe('Create Todo', async function () {
       it('create a Todo item', async function () {
         await todoList.createItem('test title 1');
@@ -120,47 +149,6 @@ describe('TodoList contract', function () {
           expect(/revert/.test(e.message)).to.be.true;
           expect(/invalid index was given/.test(e.message)).to.be.true;
         }
-      });
-    });
-
-    describe('Update Todo', async function () {
-      it('update title', async function () {
-        await todoList.createItem('test title 1');
-        const item = await todoList.getItem(0);
-        expect(item[0]).to.equal(0);
-        expect(item[1]).to.equal('test title 1');
-        expect(item[2]).to.equal(false);
-        expect(item[3]).to.equal(false);
-
-        await todoList.updateTitle(0, 'test title 1 updated');
-        const itemUpdated = await todoList.getItem(0);
-        expect(itemUpdated[0]).to.equal(0);
-        expect(itemUpdated[1]).to.equal('test title 1 updated');
-        expect(itemUpdated[2]).to.equal(false);
-        expect(itemUpdated[3]).to.equal(false);
-      });
-
-      it('toggle completed', async function () {
-        await todoList.createItem('test title 1');
-        const item = await todoList.getItem(0);
-        expect(item[0]).to.equal(0);
-        expect(item[1]).to.equal('test title 1');
-        expect(item[2]).to.equal(false);
-        expect(item[3]).to.equal(false);
-
-        await todoList.toggleCompleted(0);
-        const itemUpdated = await todoList.getItem(0);
-        expect(itemUpdated[0]).to.equal(0);
-        expect(itemUpdated[1]).to.equal('test title 1');
-        expect(itemUpdated[2]).to.equal(true);
-        expect(itemUpdated[3]).to.equal(false);
-
-        await todoList.toggleCompleted(0);
-        const itemUpdated2 = await todoList.getItem(0);
-        expect(itemUpdated2[0]).to.equal(0);
-        expect(itemUpdated2[1]).to.equal('test title 1');
-        expect(itemUpdated2[2]).to.equal(false);
-        expect(itemUpdated2[3]).to.equal(false);
       });
     });
 

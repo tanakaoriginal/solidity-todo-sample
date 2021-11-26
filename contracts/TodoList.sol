@@ -20,6 +20,8 @@ contract TodoList {
     }
 
     event TaskCreated(uint256 id, string content, bool completed);
+    event TaskTitleUpdated(uint256 id, string content, bool completed);
+    event TaskCompletedToggled(uint256 id, string content, bool completed);
 
     mapping(uint256 => Task) public tasks;
 
@@ -50,6 +52,24 @@ contract TodoList {
         return tasks[taskId];
     }
 
+    function updateTaskTitle(uint256 taskId, string memory title)
+        public
+        onlyValidTaskId(taskId)
+    {
+        Task storage task = tasks[taskId];
+        task.title = title;
+        emit TaskTitleUpdated(task.id, task.title, task.completed);
+    }
+
+    function toggleTaskCompleted(uint256 taskId)
+        public
+        onlyValidTaskId(taskId)
+    {
+        Task storage task = tasks[taskId];
+        task.completed = !task.completed;
+        emit TaskCompletedToggled(task.id, task.title, task.completed);
+    }
+
     // @deprecated
     function createItem(string memory _title) public {
         _todoList.push(Todo(_title, false, false));
@@ -75,20 +95,6 @@ contract TodoList {
     {
         string memory title = _todoList[_index].title;
         return (_index, title, _todoList[_index].completed, _todoList[_index].deleted);
-    }
-
-    function updateTitle(uint256 _index, string memory _title)
-        public
-        validIndex(_index)
-    {
-        Todo storage todo = _todoList[_index];
-        todo.title = _title;
-    }
-
-    function toggleCompleted(uint256 _index) public {
-        require(_todoList.length > _index, "invalid index was given");
-        Todo storage todo = _todoList[_index];
-        todo.completed = !todo.completed;
     }
 
     // logical deletion for a Todo item.
