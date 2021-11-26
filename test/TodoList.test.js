@@ -100,6 +100,51 @@ describe('TodoList contract', function () {
       });
     });
 
+    describe('Delete Task', async function () {
+      it('delete task item', async function () {
+        await todoList.createTask('test title 1');
+        expect(await todoList.taskCount()).to.equal(1);
+        await todoList.deleteTask(1);
+        expect(await todoList.taskCount()).to.equal(0);
+      });
+
+      it('get error  task item', async function () {
+        await todoList.createTask('test title 1');
+        expect(await todoList.taskCount()).to.equal(1);
+        await todoList.deleteTask(1);
+        expect(await todoList.taskCount()).to.equal(0);
+      });
+
+      it('get no existence error for task id = 0 on empty list', async function () {
+        try {
+          await todoList.deleteTask(0);
+        } catch(err) {
+          expect(/revert/.test(err.message)).to.be.true;
+          expect(/the task does not exist/.test(err.message)).to.be.true;
+        }
+      });
+
+      it('get no existence error for task id = 1 on empty list', async function () {
+        try {
+          await todoList.deleteTask(1);
+        } catch(err) {
+          console.log(err)
+          expect(/revert/.test(err.message)).to.be.true;
+          expect(/the id was out of bounds/.test(err.message)).to.be.true;
+        }
+      });
+
+      it('get no existence error for task id = 0 on present list', async function () {
+        try {
+          await todoList.createTask('test title 1');
+          await todoList.deleteTask(0);
+        } catch(err) {
+          expect(/revert/.test(err.message)).to.be.true;
+          expect(/the task does not exist/.test(err.message)).to.be.true;
+        }
+      });
+    });
+
     describe('Create Todo', async function () {
       it('create a Todo item', async function () {
         await todoList.createItem('test title 1');
@@ -149,19 +194,6 @@ describe('TodoList contract', function () {
           expect(/revert/.test(e.message)).to.be.true;
           expect(/invalid index was given/.test(e.message)).to.be.true;
         }
-      });
-    });
-
-    describe('Delete Todo', async function () {
-      it('delete fist Todo item', async function () {
-        await todoList.createItem('test title 1');
-        await todoList.removeItem(0);
-
-        const item = await todoList.getItem(0);
-        expect(item[0]).to.equal(0);
-        expect(item[1]).to.equal('');
-        expect(item[2]).to.equal(false);
-        expect(item[3]).to.equal(true);
       });
     });
   });

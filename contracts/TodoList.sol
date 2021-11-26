@@ -22,12 +22,18 @@ contract TodoList {
     event TaskCreated(uint256 id, string content, bool completed);
     event TaskTitleUpdated(uint256 id, string content, bool completed);
     event TaskCompletedToggled(uint256 id, string content, bool completed);
+    event TaskDeleted(uint256 id, string content, bool completed);
 
     mapping(uint256 => Task) public tasks;
 
     modifier onlyValidTaskId(uint256 taskId) {
         require(taskCount >= taskId, "the id was out of bounds");
         require(tasks[taskId].id != 0, "the task does not exist");
+        _;
+    }
+
+    modifier onlyPresentTasks() {
+        require(taskCount > 0, "No tasks found");
         _;
     }
 
@@ -70,6 +76,16 @@ contract TodoList {
         emit TaskCompletedToggled(task.id, task.title, task.completed);
     }
 
+    function deleteTask(uint256 taskId)
+        public
+        onlyValidTaskId(taskId)
+        onlyPresentTasks
+    {
+        taskCount--;
+        delete tasks[taskId];
+        emit TaskDeleted(taskId, tasks[taskId].title, tasks[taskId].completed);
+    }
+
     // @deprecated
     function createItem(string memory _title) public {
         _todoList.push(Todo(_title, false, false));
@@ -95,12 +111,5 @@ contract TodoList {
     {
         string memory title = _todoList[_index].title;
         return (_index, title, _todoList[_index].completed, _todoList[_index].deleted);
-    }
-
-    // logical deletion for a Todo item.
-    function removeItem(uint256 _index) public validIndex(_index) {
-        delete _todoList[_index];
-        _todoList[_index].deleted = true;
-        // @todo add event
     }
 }
