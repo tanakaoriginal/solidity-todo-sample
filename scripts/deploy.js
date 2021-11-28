@@ -10,7 +10,8 @@ async function main() {
   const TodoList = await ethers.getContractFactory('TodoList');
   const todoList = await TodoList.deploy();
 
-  console.log("Todo list count:", await todoList.getItemCount());
+  console.log("Todo list task data count:", await todoList.dataCount());
+  console.log("Todo list active task count:", await todoList.taskCount());
 
   saveFrontendFiles(todoList);
 }

@@ -3,72 +3,74 @@
 pragma solidity ^0.8.9;
 
 contract TodoList {
+
+    // For counting length of tasks mapping (including deleted tasks).
+    uint256 public dataCount = 0;
+    // For counting length of active tasks.
     uint256 public taskCount = 0;
 
+    // Task data strucutre
+    // When a task was deleted, id is set to 0.
     struct Task {
         uint256 id;
         string title;
         bool completed;
     }
 
-    event TaskCreated(uint256 id, string content, bool completed);
-    event TaskTitleUpdated(uint256 id, string content, bool completed);
-    event TaskCompletedToggled(uint256 id, string content, bool completed);
-    event TaskDeleted(uint256 id, string content, bool completed);
-
     mapping(uint256 => Task) public tasks;
 
-    modifier onlyValidTaskId(uint256 taskId) {
-        require(taskCount >= taskId, "the id was out of bounds");
-        require(tasks[taskId].id != 0, "the task does not exist");
-        _;
-    }
+    event TaskCreated(address indexed _from, uint256 id, string content, bool completed);
+    event TaskTitleUpdated(address indexed _from, uint256 id, string content, bool completed);
+    event TaskCompletedToggled(address indexed _from, uint256 id, string content, bool completed);
+    event TaskDeleted(address indexed _from, uint256 id);
 
-    modifier onlyPresentTasks() {
-        require(taskCount > 0, "No tasks found");
+    modifier onlyPresentTasks(uint256 _taskId) {
+        require(_taskId > 0, "The id is not available");
+        require(dataCount > 0, "No task data found");
+        require(taskCount > 0, "No task found");
+        require(taskCount >= _taskId, "The id was out of bounds");
         _;
     }
 
     function createTask(string memory _title) public {
+        dataCount++;
+        tasks[dataCount] = Task(dataCount, _title, false);
         taskCount++;
-        tasks[taskCount] = Task(taskCount, _title, false);
-        emit TaskCreated(taskCount, _title, false);
+        emit TaskCreated(msg.sender, dataCount, _title, false);
     }
 
-    function getTask(uint256 taskId)
+    function getTask(uint256 _taskId)
         public
         view
-        onlyValidTaskId(taskId)
         returns (Task memory task)
     {
-        return tasks[taskId];
+        return tasks[_taskId];
     }
 
-    function updateTaskTitle(uint256 taskId, string memory title)
+    function updateTaskTitle(uint256 _taskId, string memory _title)
         public
-        onlyValidTaskId(taskId)
+        onlyPresentTasks(_taskId)
     {
-        Task storage task = tasks[taskId];
-        task.title = title;
-        emit TaskTitleUpdated(task.id, task.title, task.completed);
+        Task storage task = tasks[_taskId];
+        task.title = _title;
+        emit TaskTitleUpdated(msg.sender, task.id, task.title, task.completed);
     }
 
-    function toggleTaskCompleted(uint256 taskId)
+    function toggleTaskCompleted(uint256 _taskId)
         public
-        onlyValidTaskId(taskId)
+        onlyPresentTasks(_taskId)
     {
-        Task storage task = tasks[taskId];
+        Task storage task = tasks[_taskId];
         task.completed = !task.completed;
-        emit TaskCompletedToggled(task.id, task.title, task.completed);
+        emit TaskCompletedToggled(msg.sender, task.id, task.title, task.completed);
     }
 
-    function deleteTask(uint256 taskId)
+    function deleteTask(uint256 _taskId)
         public
-        onlyValidTaskId(taskId)
-        onlyPresentTasks
+        onlyPresentTasks(_taskId)
     {
+        delete tasks[_taskId];
         taskCount--;
-        delete tasks[taskId];
-        emit TaskDeleted(taskId, tasks[taskId].title, tasks[taskId].completed);
+        emit TaskDeleted(msg.sender, _taskId);
     }
 }
