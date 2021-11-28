@@ -6,8 +6,8 @@ import TaskFilter from './components/TaskFilter';
 
 import { ListGroup, Container, Row, Col, ButtonGroup } from 'react-bootstrap';
 
-import TodoList from './contracts/TodoList.json';
-import ContractAddress from './contracts/contract-address.json';
+import TodoList from './artifacts/TodoList.json';
+import ContractAddress from './artifacts/contract-address.json';
 
 const contractAddress = ContractAddress.TodoList;
 
