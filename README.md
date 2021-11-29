@@ -11,20 +11,24 @@ BuildVersion:   20G224
 Docker version 20.10.8, build 3967b7d
 ```
 
-### Quick start
+## Quick start
+
+1. Set up [MetaMask](https://metamask.io/) browser extension.
+    - [Chrome web store -> MetaMask](https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=ja).
+2. Run the commands for starting the todo app.
 
 ```shell
 % git clone https://github.com/tanakaoriginal/solidity-todo-sample.git
 % cd solidity-todo-sample
-% docker compose run --rm hardhat npm install
-% docker compose up ganache -d
-% cd frontend
-% npm install
-% npm start
+% make setup
+% make up
+% make deploy-ganache
 % open localhost:3000
 ```
 
-### First setup
+## Development
+
+### Setup Hardhat project
 
 ```shell
 % git clone https://github.com/tanakaoriginal/solidity-todo-sample.git
@@ -33,38 +37,9 @@ Docker version 20.10.8, build 3967b7d
 % npm install
 ```
 
-## Quick Start
-
-### Start a Geth private node
-
-```shell
-% make up-geth-private
-```
-
-## Sample contract
-
-Please refer the document for these operations below.
-
-[Sample contract setup](./docs/sample-contract-setup.md)
-
-1. Connect local disk to the remix workspace.
-2. Compile the sample contract.
-3. Connect geth node to the remix IDE.
-4. Deploy and use the contract.
-
-## Local Geth cluster
-
-[Local geth cluster setup](./docs/local-geth-cluster-setup.md)
-
-After the setup above, two nodes will be available with the command below.
-
-```shell
-% make up-geth-nodes
-```
-
 ## Hardhat sample
 
-Hardhat is also available on this sample. You can deploy hardhat network with two terminals.
+Hardhat is available on this sample. You can deploy hardhat network with two terminals.
 
 First, boot the hardhat network in terminal-A.
 
