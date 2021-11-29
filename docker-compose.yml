@@ -2,6 +2,23 @@ version: '3.8'
 
 services:
 
+  frontend:
+    container_name: frontend
+    image: node:16.13.0-alpine3.14
+    ports:
+      - 3000:3000
+    working_dir: /var/frontend
+    volumes:
+      - ./frontend:/var/frontend
+    privileged: true
+    stdin_open: true
+    tty: true
+    environment:
+      - TZ=Asia/Tokyo
+    depends_on:
+      - ganache
+    command: npm start
+
   hardhat:
     container_name: hardhat
     build: ./docker/hardhat

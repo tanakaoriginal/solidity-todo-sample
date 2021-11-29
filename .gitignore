@@ -8,3 +8,5 @@ cache/
 .wallet
 
 volume/ganache/data/*
+
+frontend/src/artifacts/*
