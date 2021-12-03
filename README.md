@@ -13,17 +13,75 @@ Docker version 20.10.8, build 3967b7d
 
 ## Quick start
 
-1. Set up [MetaMask](https://metamask.io/) browser extension.
-    - [Chrome web store -> MetaMask](https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=ja).
-2. Run the commands for starting the todo app.
+### 1. Start the local network and the app frontend server
 
 ```shell
 % git clone https://github.com/tanakaoriginal/solidity-todo-sample.git
 % cd solidity-todo-sample
 % make setup
 % make up
+wait a few seconds...
+% docker logs ganache
+```
+
+After the last command, 10 test accounts and private keys will be displayed.
+If not, wait few more seconds and re-run `docker logs ganache`.
+Please pickup one private key you like to set up MetaMask.
+
+![Test accounts and private keys](./docs/img/test-private-keys.png)
+
+### 2. Set up [MetaMask](https://metamask.io/) browser extension
+
+#### Install the MetaMask browser extension
+
+[Chrome web store -> MetaMask](https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=ja).
+
+#### Connect to localhost:8485 from MetaMask
+
+![Connect localhost](./docs/img/metamask-connect-localhost.png)
+
+#### Import a test account
+
+Open the `import account` window. Then set the test private key that you picked up before.
+
+| Account menu | Import Account|
+|---|---|
+| ![Import an account](./docs/img/metamask-import-account-1.png) | ![Set a test private key](docs/img/metamask-import-account-2.png) |
+
+### 3. Deploy the todo smart contract
+
+```shell
 % make deploy-ganache
-% open localhost:3000
+```
+
+After you see the message like below, let's access the todo app.
+
+![Deploy the smart contract](docs/img/deploy-smart-contract.png)
+
+### 4. Open the Todo App
+
+Open the URL and then connect the app to MetaMask.
+
+```shell
+% open http://localhost:3000
+```
+
+After you make a task, you can pay the gas fee via MetaMask.
+
+| Make a task | Pay Gas Fee |
+|---|---|
+|![Make a task](./docs/img/add-todo-1.png) | ![Pay Gas Fee](./docs/img/add-todo-2.png)|
+
+Also you need the gas fee when you complete and delete a task.
+
+![Todo list](docs/img/todo-list.png)
+
+### 5. Clean up
+
+If you finished playing the app. You can delte related docker images, volumes, network by running the command.
+
+```shell
+% make down
 ```
 
 ## Development

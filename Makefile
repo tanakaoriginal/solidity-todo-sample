@@ -50,3 +50,8 @@ setup:
 up:
 	docker compose up ganache -d
 	docker compose up frontend -d
+	sleep 5
+	docker logs ganache
+
+down:
+	docker-compose down --rmi all --volumes --remove-orphans
