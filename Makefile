@@ -47,11 +47,14 @@ setup:
 	docker compose run --rm hardhat npm install
 	docker compose run --rm frontend npm install
 
-up:
+up-network:
 	docker compose up ganache -d
-	docker compose up frontend -d
-	sleep 5
+
+check-network:
 	docker logs ganache
+
+up-frontend:
+	docker compose up frontend -d
 
 down:
 	docker-compose down --rmi all --volumes --remove-orphans
