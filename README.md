@@ -22,9 +22,7 @@ These are the steps.
 5. Open the Todo App
 6. Clean up
 
-### 1. Start the local network
-
-#### 1-1. Setup components
+### 1. Setup components
 
 ```shell
 % git clone https://github.com/kennyttotheleft/solidity-todo-sample.git
@@ -32,21 +30,23 @@ These are the steps.
 % make setup
 ```
 
-#### 1-2. Start local network
+### 2. Start local network
+
+Start the network and then pick up a private key to set up MetaMask on the step 4.
 
 ```shell
 % make up-network
-wait a few seconds...
+wait a few seconds to start the network...
 % make check-network
 ```
 
 After the last command, 10 test accounts and private keys will be displayed.
 If not, wait few more seconds to start the network and re-run `make check-network` again.
-Please pickup one private key you like to set up MetaMask on the step 3.
+Then please pickup one private key you like.
 
 <img src="./docs/img/test-private-keys.png" alt="Test accounts and private keys" width="420px" />
 
-### 2. Deploy the todo smart contract
+### 3. Deploy the todo smart contract
 
 ```shell
 % make deploy-ganache
@@ -55,17 +55,18 @@ Please pickup one private key you like to set up MetaMask on the step 3.
 After you see the message like below, let's access the todo app.
 
 ![Deploy the smart contract](docs/img/deploy-smart-contract.png)
-### 3. Set up [MetaMask](https://metamask.io/) browser extension
 
-#### 3-1. Install the MetaMask browser extension
+### 4. Set up [MetaMask](https://metamask.io/) browser extension
+
+#### 4-1. Install the MetaMask browser extension
 
 [Chrome web store -> MetaMask](https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=ja).
 
-#### 3-2. Connect to local network (Localhost:8485) from MetaMask
+#### 4-2. Connect to local network (Localhost:8485) from MetaMask
 
 <img src="./docs/img/metamask-connect-localhost.png" alt="Connect localhost:8545" width="320" />
 
-#### 3-3. Import a test account
+#### 4-3. Import a test account
 
 Open the `import account` window. Then set the test private key that you picked up on the step 1.
 
@@ -73,7 +74,7 @@ Open the `import account` window. Then set the test private key that you picked 
 |---|---|
 | ![Import an account](./docs/img/metamask-import-account-1.png) | ![Set a test private key](docs/img/metamask-import-account-2.png) |
 
-### 4. Open the Todo App
+### 5. Open the Todo App
 
 Open the URL and then connect the app to MetaMask.
 
@@ -92,7 +93,7 @@ Also you need the gas fee when you complete and delete a task.
 
 ![Todo list](docs/img/todo-list.png)
 
-### 5. Clean up
+### 6. Clean up
 
 If you finished playing the app. You can delte related docker images, volumes, network by running the command.
 
