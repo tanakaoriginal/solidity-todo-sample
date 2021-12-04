@@ -13,10 +13,18 @@ Docker version 20.10.8, build 3967b7d
 
 ## Quick start
 
+These are the steps.
+
+1. Start the local network and the app frontend server
+2. Set up MetaMask browser extension
+3. Deploy the todo smart contract
+4. Open the Todo App
+5. Clean up
+
 ### 1. Start the local network and the app frontend server
 
 ```shell
-% git clone https://github.com/tanakaoriginal/solidity-todo-sample.git
+% git clone https://github.com/kennyttotheleft/solidity-todo-sample.git
 % cd solidity-todo-sample
 % make setup
 % make up
@@ -26,21 +34,21 @@ wait a few seconds...
 
 After the last command, 10 test accounts and private keys will be displayed.
 If not, wait few more seconds and re-run `docker logs ganache`.
-Please pickup one private key you like to set up MetaMask.
+Please pickup one private key you like to set up MetaMask on the next step.
 
-![Test accounts and private keys](./docs/img/test-private-keys.png)
+<img src="./docs/img/test-private-keys.png" alt="Test accounts and private keys" width="420px" />
 
 ### 2. Set up [MetaMask](https://metamask.io/) browser extension
 
-#### Install the MetaMask browser extension
+#### 2-1. Install the MetaMask browser extension
 
 [Chrome web store -> MetaMask](https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=ja).
 
-#### Connect to localhost:8485 from MetaMask
+#### 2-2. Connect to local network (Localhost:8485) from MetaMask
 
-![Connect localhost](./docs/img/metamask-connect-localhost.png)
+<img src="./docs/img/metamask-connect-localhost.png" alt="Connect localhost:8545" width="320" />
 
-#### Import a test account
+#### 2-3. Import a test account
 
 Open the `import account` window. Then set the test private key that you picked up before.
 
@@ -84,20 +92,22 @@ If you finished playing the app. You can delte related docker images, volumes, n
 % make down
 ```
 
+---
+
 ## Development
 
 ### Setup Hardhat project
 
 ```shell
-% git clone https://github.com/tanakaoriginal/solidity-todo-sample.git
+% git clone https://github.com/kennyttotheleft/solidity-todo-sample.git
 % cd solidity-todo-sample
 % make project
 % npm install
 ```
 
-## Hardhat sample
+## Hardhat network
 
-Hardhat is available on this sample. You can deploy hardhat network with two terminals.
+Hardhat network for localhost is available on this sample. You can deploy hardhat network with two terminals.
 
 First, boot the hardhat network in terminal-A.
 
@@ -113,9 +123,8 @@ After the hardhat network was booted, you can deploy to the network in terminal-
 
 ## Ganache
 
-Ganache is also available if you would like to persist account data.
-
-Ganache network can be booted with the make command and the data will be created on `volume/ganache/data`.
+Ganache is also available if you would like to persist account data. You can start the Ganache network with the make command below.
+The data will be created on `volume/ganache/data`.
 
 ```shell
 % make ganache
@@ -132,6 +141,8 @@ Also you can deploy contracts to the Ganache network like Hardhat above.
 ```shell
 % make deploy-ganache
 ```
+
+---
 
 ## Reference
 
