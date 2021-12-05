@@ -88,6 +88,32 @@ function App(props) {
       // Metamask error
       if (error.code === 4001) {
         alert('Transaction was canceled by user');
+      } else if (error.code === -32603) {
+        const errorData = error.data;
+        if (typeof errorData === 'object') {
+          alert(errorData.message);
+        } else if (typeof errorData === 'undefined') {
+          //
+          // Handling the error like below
+          // `RPC Error: [ethjs-query] while formatting outputs from RPC`
+          //
+          // Extract error stack from string
+          const stackStr = ('{' + error.message.split("'{")[1]).replace(
+            "}'",
+            '}'
+          )
+          const errorStack = JSON.parse(stackStr);
+          console.error('errorStack.value', errorStack.value);
+          let errorMessage = ''
+          if (errorStack.value.data.code === -32000) {
+            errorMessage =
+              'Nonce Error: ' + errorStack.value.data.code + '\nDetail\n'
+          }
+          alert(errorMessage + errorStack.value.data.message);
+        } else {
+          console.log('error', error);
+          alert('Unknown Metamask RPC error');
+        }
       } else {
         console.log('error', error);
         alert('Unknown Metamask error');
