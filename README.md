@@ -175,3 +175,5 @@ Also you can deploy contracts to the Ganache network like Hardhat above.
 - [React-Bootstrap Docs](https://react-bootstrap.netlify.app/getting-started/introduction/)
 - [Eventにつけるindexedの役割](https://y-nakajo.hatenablog.com/entry/2017/12/08/144643)
 - [reentry-attack.sol](https://github.com/raineorshine/solidity-by-example#reentry-attacksol)
+- [Solidity by Example version 0.8.3 > Error](https://solidity-by-example.org/error/)
+- [Solidity revert with custom error explained with example !!](https://medium.com/coinmonks/solidity-revert-with-custom-error-explained-with-example-d9dff8937ef4)
