@@ -25,9 +25,13 @@ contract TodoList {
     event TaskDeleted(address indexed _from, uint256 id);
 
     modifier onlyPresentTasks(uint256 _taskId) {
+        /// No data exists for the ID to read out.
         require(_taskId > 0, "The id is not available");
+        /// No data found due to the database was empty.
         require(dataCount > 0, "No task data found");
+        /// No tasks except deleted were found.
         require(taskCount > 0, "No task found");
+        /// The ID was out of bounds for the data.
         require(taskCount >= _taskId, "The id was out of bounds");
         _;
     }
